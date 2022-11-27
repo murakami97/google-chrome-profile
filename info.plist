@@ -79,7 +79,7 @@
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string>Seaching Profiles...</string>
+				<string>Loading...</string>
 				<key>script</key>
 				<string>google_chrome_profiles=`osascript ./get_google_chrome_profiles.applescript`
 python3 google_chrome_profiles_to_json.py $google_chrome_profiles {query}</string>

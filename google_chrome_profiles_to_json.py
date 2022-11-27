@@ -10,12 +10,10 @@ import re
 # example
 # profiles = "menu item EXAMPLE of menu プロファイル of menu bar item プロファイル of menu bar 1 of application process Google Chrome, ..."
 
-if len(sys.argv) == 2:
-    profiles = str(sys.argv[1])
-    q = ""
-elif len(sys.argv) == 3:
-    profiles = sys.argv[1]
-    q = sys.argv[2]
+profiles = str(sys.argv[1])
+# クエリが存在する場合は q_list として受け取る
+# クエリがないときは q_list は空のリストになる
+q_list = sys.argv[2:]
 
 profiles = profiles.split(", ")
 
@@ -36,7 +34,13 @@ items = {}
 item_list = []
 for profile in profiles:
     name = profile_to_name(profile)
-    if q and q not in name:
+    is_matched = True
+    # クエリが存在する場合は、名前がすべてのクエリ文字列を含む profile だけ抽出する。大文字小文字は区別しない。
+    for q in q_list:
+        if q.lower() not in name.lower():
+            is_matched = False
+            break
+    if not is_matched:
         continue
     item = {}
     item["title"] = name
