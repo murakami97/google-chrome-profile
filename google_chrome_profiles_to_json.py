@@ -23,27 +23,33 @@ profiles = profiles[:-4]
 
 def profile_to_name(profile):
     # ユーザーに表示するために profile の名前部分を取り出す関数
+    # username (profile_name) の形式なので、username を除いたものも返しておく
     name = profile
     name = name.removeprefix("menu item ")
     name = name.removesuffix(
         " of menu プロファイル of menu bar item プロファイル of menu bar 1 of application process Google Chrome")
-    return name
+    parts_in_parens = re.findall("\((.*)\)", name)
+    if len(parts_in_parens) >= 1:
+        name_without_username = parts_in_parens[-1]
+    else:
+        name_without_username = name
+    return name, name_without_username
 
 
 items = {}
 item_list = []
 for profile in profiles:
-    name = profile_to_name(profile)
+    name, name_without_username = profile_to_name(profile)
     is_matched = True
     # クエリが存在する場合は、名前がすべてのクエリ文字列を含む profile だけ抽出する。大文字小文字は区別しない。
     for q in q_list:
-        if q.lower() not in name.lower():
+        if q.lower() not in name_without_username.lower():
             is_matched = False
             break
     if not is_matched:
         continue
     item = {}
-    item["title"] = name
+    item["title"] = name_without_username
     item["subtitle"] = f"Open Google Chrome with [ {name} ] profile"
     item["arg"] = name
     item_list.append(item)
